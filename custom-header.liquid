@@ -1,0 +1,457 @@
+<section class="custom-header-main-content">
+  <div class="custon-header">
+    <div class="main-header-row">
+      <div class="main-header-content">
+
+        {% comment %} -----------Header Upper Nav----------- {% endcomment %}
+
+        <div class="header-upper-nav">
+          <div class="nav-content">
+            <ul class="upper_nav upper-nav-first">
+              {% if localization.available_countries.size > 1 %}
+                <localization-form>
+                  {%- form 'localization', id: 'FooterLanguageForm', class: 'localization-form' -%}
+                    <div class="no-js-hidden">
+                      <div class="disclosure">
+                        <button type="button" class="disclosure__button localization-form__select localization-selector link link--text caption-large" aria-expanded="false" aria-controls="FooterLanguageList" aria-describedby="FooterLanguageLabel">
+                          {{ localization.language.endonym_name | capitalize }}
+                          {% render 'icon-caret' %}
+                        </button>
+                        <div class="disclosure__list-wrapper" hidden>
+                          <ul id="FooterLanguageList" role="list" class="disclosure__list list-unstyled">
+                            {%- for language in localization.available_languages -%}
+                              <li class="disclosure__item" tabindex="-1">
+                                <a class="link link--text disclosure__link caption-large{% if language.iso_code == localization.language.iso_code %} disclosure__link--active{% endif %} focus-inset" href="#" hreflang="{{ language.iso_code }}" lang="{{ language.iso_code }}"{% if language.iso_code == localization.language.iso_code %} aria-current="true"{% endif %} data-value="{{ language.iso_code }}">
+                                  {{ language.endonym_name | capitalize }}
+                                </a>
+                              </li>
+                            {%- endfor -%}
+                          </ul>
+                        </div>
+                      </div>
+                      <input type="hidden" name="locale_code" value="{{ localization.language.iso_code }}">
+                    </div>
+                  {%- endform -%}
+                </localization-form>
+                <localization-form>
+                  {%- form 'localization', id: 'FooterCountryForm', class: 'localization-form' -%}
+                    <div class="no-js-hidden">
+                      <div class="disclosure">
+                        <button type="button" class="disclosure__button localization-form__select localization-selector link link--text caption-large currency" aria-expanded="false" aria-controls="FooterCountryList" aria-describedby="FooterCountryLabel">
+                          {{ localization.country.name }} ({{ localization.country.currency.iso_code }} {{ localization.country.currency.symbol }})
+                          {% render 'icon-caret' %}
+                        </button>
+                        <div class="disclosure__list-wrapper" hidden>
+                          <ul id="FooterCountryList" role="list" class="disclosure__list list-unstyled">
+                            {%- for country in localization.available_countries -%}
+                              <li class="disclosure__item" tabindex="-1">
+                                <a class="link link--text disclosure__link caption-large{% if country.iso_code == localization.country.iso_code %} disclosure__link--active{% endif %} focus-inset" href="#"{% if country.iso_code == localization.country.iso_code %} aria-current="true"{% endif %} data-value="{{ country.iso_code }}">
+                                  {{ country.name }} <span class="localization-form__currency">({{ country.currency.iso_code }} {{ country.currency.symbol }})</span>
+                                </a>
+                              </li>
+                            {%- endfor -%}
+                          </ul>
+                        </div>
+                      </div>
+                      <input type="hidden" name="country_code" value="{{ localization.country.iso_code }}">
+                    </div>
+                  {%- endform -%}
+                </localization-form>
+              {% endif %}
+            </ul>
+            <ul class="upper_nav upper-nav-second">
+              <li>
+                <a href="/" class="nav-social-media">
+                  <i class="fa fa-facebook" aria-hidden="true"></i>
+                </a>
+              </li>
+              <li>
+                <a href="/" class="nav-social-media">
+                  <i class="fa fa-twitter" aria-hidden="true"></i>
+                </a>
+              </li>
+              <li>
+                <a href="/" class="nav-social-media">
+                  <i class="fa fa-instagram" aria-hidden="true"></i>
+                </a>
+              </li>
+              <li>
+                <a href="/" class="nav-social-media">
+                  <i class="fa fa-pinterest" aria-hidden="true"></i>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        {% comment %} -----------Header Middle Part---------- {% endcomment %}
+
+        <div class="header-lower-nav">
+          <div class="header-inner-section">
+            <div class="header-block menu-toggle">
+              <i class="fa fa-bars" aria-hidden="true"></i>
+              <i class="fa fa-times" aria-hidden="true"></i>
+            </div>
+            
+
+            <div class="header-block header-first-block">
+              <div class="header-inner">
+                {% if  section.settings.hedphone-img == blank %}
+                  <svg class="placeholder-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 525.5 525.5"><path d="M324.5 212.7H203c-1.6 0-2.8 1.3-2.8 2.8V308c0 1.6 1.3 2.8 2.8 2.8h121.6c1.6 0 2.8-1.3 2.8-2.8v-92.5c0-1.6-1.3-2.8-2.9-2.8zm1.1 95.3c0 .6-.5 1.1-1.1 1.1H203c-.6 0-1.1-.5-1.1-1.1v-92.5c0-.6.5-1.1 1.1-1.1h121.6c.6 0 1.1.5 1.1 1.1V308z"></path><path d="M210.4 299.5H240v.1s.1 0 .2-.1h75.2v-76.2h-105v76.2zm1.8-7.2l20-20c1.6-1.6 3.8-2.5 6.1-2.5s4.5.9 6.1 2.5l1.5 1.5 16.8 16.8c-12.9 3.3-20.7 6.3-22.8 7.2h-27.7v-5.5zm101.5-10.1c-20.1 1.7-36.7 4.8-49.1 7.9l-16.9-16.9 26.3-26.3c1.6-1.6 3.8-2.5 6.1-2.5s4.5.9 6.1 2.5l27.5 27.5v7.8zm-68.9 15.5c9.7-3.5 33.9-10.9 68.9-13.8v13.8h-68.9zm68.9-72.7v46.8l-26.2-26.2c-1.9-1.9-4.5-3-7.3-3s-5.4 1.1-7.3 3l-26.3 26.3-.9-.9c-1.9-1.9-4.5-3-7.3-3s-5.4 1.1-7.3 3l-18.8 18.8V225h101.4z"></path><path d="M232.8 254c4.6 0 8.3-3.7 8.3-8.3s-3.7-8.3-8.3-8.3-8.3 3.7-8.3 8.3 3.7 8.3 8.3 8.3zm0-14.9c3.6 0 6.6 2.9 6.6 6.6s-2.9 6.6-6.6 6.6-6.6-2.9-6.6-6.6 3-6.6 6.6-6.6z"></path></svg>
+                {% else %}
+                  <div class="headphone_icon">
+                    {{ section.settings.hedphone-img }}
+                  </div>
+                {% endif %}
+                  
+                
+                <div class="first-block-content">
+                  <h3 class="service-head">{{ section.settings.service-head }}</h3>
+                  <span class="service-phone">{{ section.settings.service-phone }}</span>
+                </div>
+              </div>
+            </div>
+            {% if section.settings.logo-img == blank %}
+              <svg class="placeholder-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 525.5 525.5"><path d="M324.5 212.7H203c-1.6 0-2.8 1.3-2.8 2.8V308c0 1.6 1.3 2.8 2.8 2.8h121.6c1.6 0 2.8-1.3 2.8-2.8v-92.5c0-1.6-1.3-2.8-2.9-2.8zm1.1 95.3c0 .6-.5 1.1-1.1 1.1H203c-.6 0-1.1-.5-1.1-1.1v-92.5c0-.6.5-1.1 1.1-1.1h121.6c.6 0 1.1.5 1.1 1.1V308z"></path><path d="M210.4 299.5H240v.1s.1 0 .2-.1h75.2v-76.2h-105v76.2zm1.8-7.2l20-20c1.6-1.6 3.8-2.5 6.1-2.5s4.5.9 6.1 2.5l1.5 1.5 16.8 16.8c-12.9 3.3-20.7 6.3-22.8 7.2h-27.7v-5.5zm101.5-10.1c-20.1 1.7-36.7 4.8-49.1 7.9l-16.9-16.9 26.3-26.3c1.6-1.6 3.8-2.5 6.1-2.5s4.5.9 6.1 2.5l27.5 27.5v7.8zm-68.9 15.5c9.7-3.5 33.9-10.9 68.9-13.8v13.8h-68.9zm68.9-72.7v46.8l-26.2-26.2c-1.9-1.9-4.5-3-7.3-3s-5.4 1.1-7.3 3l-26.3 26.3-.9-.9c-1.9-1.9-4.5-3-7.3-3s-5.4 1.1-7.3 3l-18.8 18.8V225h101.4z"></path><path d="M232.8 254c4.6 0 8.3-3.7 8.3-8.3s-3.7-8.3-8.3-8.3-8.3 3.7-8.3 8.3 3.7 8.3 8.3 8.3zm0-14.9c3.6 0 6.6 2.9 6.6 6.6s-2.9 6.6-6.6 6.6-6.6-2.9-6.6-6.6 3-6.6 6.6-6.6z"></path></svg>
+              {% else %}
+              <div class="header-block header-second-block">
+                <a href="/"><img
+                    class="img-logo"
+                    src="{{ section.settings.logo-img |  img_url: 'master'  }}"
+                    alt="img-logo">
+                </a>
+              </div>
+            {% endif %}
+            <ul class="header-block header-last-block">
+              <li class="search">
+                <a class="search-logo">
+                  <i class="fa fa-search" aria-hidden="true"></i>
+                </a>
+              </li>
+              <li class="user">
+                {% if customer.has_account %}
+                  <a href="{{ routes.account_url }}" class="user">
+                    <i class="fa fa-user-o" aria-hidden="true"></i>
+                  </a>
+                {% else %}
+                  <a href="{{ routes.account_login_url }}" class="user">
+                    <i class="fa fa-user-o" aria-hidden="true"></i>
+                    </a>
+                {% endif %}
+              </li>
+              <li class="heart">
+                <a href="/" class="heart">
+                  <i class="fa fa-heart-o" aria-hidden="true"></i>
+                </a>
+              </li>
+              <li class="cart">
+                <a href="#" class="open_cart">
+                  <div class="add-to-cart-icon">
+                    <i class="fa fa-shopping-bag" aria-hidden="true">
+                      {% comment %} {% if cart.item_count > 0 %} {% endcomment %}
+                        <span class="product-count">{{ cart.item_count }}</span>
+                      {% comment %} {% endif %} {% endcomment %}
+                    </i>
+                  </div>
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          {% comment %} DeskTop Menu {% endcomment %}
+
+          <div class="main-menu">
+            <nav class="mynav">
+              <ul class="mynav-list">
+                {% for link in section.settings.header-link.links %}
+                  <li class="mynav-item">
+                    <a class="mynav-item-list" href="{{ link.url }}">{{ link.title }}</a>
+                    {% if link.links != blank %}
+                      <i class="header fa fa-angle-down" aria-hidden="true"></i>
+                      {% assign MenuTitle = "" %}
+                      {% for block in section.blocks %}
+                        {% assign MenuTitle = menu_title | append: block.settings.menu_title | append: ',' %}
+                      {% endfor %}
+                      {% if MenuTitle contains link.title %}
+                        <ul class="mynav-child-list mega-menu-one">
+                          <div class="child-mega-nav-main">
+                            <div class="child-nav-item">
+                              {% for childlink in link.links %}
+                                <li class="child-menu mega-nav-item">
+                                  <a class="child-list-item mega-nav-list" href="{{ childlink.url }}">{{ childlink.title }}</a>
+                                  {% if childlink.links != blank %}
+                                    <ul class="mega-grandchild-one">
+                                      {% for grandchildlink in childlink.links %}
+                                        <li class="grandchild-menu mega-grand-child-nav">
+                                          <a class="grand-child-list-item mega-grandchild-list-item" href="{{ grandchildlink.url }}">{{ grandchildlink.title }}</a>
+                                        </li>
+                                      {% endfor %}
+                                    </ul>
+                                  {% endif %}
+                                </li>
+                              {% endfor %}
+                            </div>
+                            {% for block in section.blocks %}
+                              <div class="child-nav-img">
+                                <div class="child-nav-inner-blocks">
+                                  {% if block.settings.mega-img %}
+                                    {% if block.settings.menu_img == blank %}
+                                      <svg class="placeholder-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 525.5 525.5"><path d="M324.5 212.7H203c-1.6 0-2.8 1.3-2.8 2.8V308c0 1.6 1.3 2.8 2.8 2.8h121.6c1.6 0 2.8-1.3 2.8-2.8v-92.5c0-1.6-1.3-2.8-2.9-2.8zm1.1 95.3c0 .6-.5 1.1-1.1 1.1H203c-.6 0-1.1-.5-1.1-1.1v-92.5c0-.6.5-1.1 1.1-1.1h121.6c.6 0 1.1.5 1.1 1.1V308z"></path><path d="M210.4 299.5H240v.1s.1 0 .2-.1h75.2v-76.2h-105v76.2zm1.8-7.2l20-20c1.6-1.6 3.8-2.5 6.1-2.5s4.5.9 6.1 2.5l1.5 1.5 16.8 16.8c-12.9 3.3-20.7 6.3-22.8 7.2h-27.7v-5.5zm101.5-10.1c-20.1 1.7-36.7 4.8-49.1 7.9l-16.9-16.9 26.3-26.3c1.6-1.6 3.8-2.5 6.1-2.5s4.5.9 6.1 2.5l27.5 27.5v7.8zm-68.9 15.5c9.7-3.5 33.9-10.9 68.9-13.8v13.8h-68.9zm68.9-72.7v46.8l-26.2-26.2c-1.9-1.9-4.5-3-7.3-3s-5.4 1.1-7.3 3l-26.3 26.3-.9-.9c-1.9-1.9-4.5-3-7.3-3s-5.4 1.1-7.3 3l-18.8 18.8V225h101.4z"></path><path d="M232.8 254c4.6 0 8.3-3.7 8.3-8.3s-3.7-8.3-8.3-8.3-8.3 3.7-8.3 8.3 3.7 8.3 8.3 8.3zm0-14.9c3.6 0 6.6 2.9 6.6 6.6s-2.9 6.6-6.6 6.6-6.6-2.9-6.6-6.6 3-6.6 6.6-6.6z"></path></svg>
+                                    {% else %}
+                                      <img
+                                      class="nav-child"
+                                      src="{{ block.settings.menu_img | img_url: 'master' }}"
+                                      alt="Product Image">
+                                    {% endif %}
+                                    <div class="child-nav-contet">
+                                      <h3 class="nav">{{ block.settings.nav-content }}</h3>
+                                      <div class="customcontainer_btn">
+                                        <a id="pages-btn nav-btn" href="{{ block.settings.link }}">{{ block.settings.btn }}</a>
+                                      </div>
+                                    </div>
+                                  {% endif %}
+                                </div>
+                              </div>
+                            {% endfor %}
+                          </div>
+                        </ul>
+                      {% else %}
+                        <ul class="mynav-child-list">
+                          {% for childlink in link.links %}
+                            <li class="child-menu">
+                              <a class="child-list-item" href="{{ childlink.url }}">{{ childlink.title }}</a>
+                              {% if childlink.links != blank %}
+                                <i class="Child_link fa fa-angle-down" aria-hidden="true"></i>
+                                <ul class="mynav-grandchild-list">
+                                  {% for grandchildlink in childlink.links %}
+                                    <li class="grandchild-menu">
+                                      <a class="grand-child-list-item" href="{{ grandchildlink.url }}">{{ grandchildlink.title }}</a>
+                                    </li>
+                                  {% endfor %}
+                                </ul>
+                              {% endif %}
+                            </li>
+                          {% endfor %}
+                        </ul>
+                      {% endif %}
+                    {% endif %}
+                  </li>
+                {% endfor %}
+              </ul>
+            </nav>
+          </div>
+
+          {% comment %} Media 768 Menu {% endcomment %}
+
+          <div class="header-last-block-toggle">
+            <nav class="mynav-toggle">
+              <ul class="mynav-list-toggle">
+                {% for link in section.settings.header-link.links %}
+                  <div class="nav-item">
+                    <li class="mynav-item-toggle">
+                      <a class="mynav-item-list-toggle" href="{{ link.url }}">{{ link.title }}</a>
+                      {% if link.links != blank %}
+                        <i class="fa fa-chevron-down down-icon-toggle" aria-hidden="true" aria-expanded="false"></i>
+                        <ul class="mynav-child-list-toggle">
+                          {% for childlink in link.links %}
+                            <li class="child-menu-toggle">
+                              <a class="child-list-item-toggle" href="{{ childlink.url }}">{{ childlink.title }}</a>
+                              {% if childlink.links != blank %}
+                                <i class="fa fa-plus plus-nav" aria-hidden="true" aria-expanded="false"></i>
+                                <ul class="mynav-grandchild-list-toggle">
+                                  {% for grandchildlink in childlink.links %}
+                                    <li class="grandchild-menu-toggle">
+                                      <a class="grand-child-list-item-toggle" href="{{ grandchildlink.url }}">{{ grandchildlink.title }}</a>
+                                    </li>
+                                  {% endfor %}
+                                </ul>
+                              {% endif %}
+                            </li>
+                          {% endfor %}
+                        </ul>
+                      {% endif %}
+                    </li>
+                  </div>
+                {% endfor %}
+              </ul>
+            </nav>
+            <div class="header_footer_responsive">
+              <div class="user-responsive">
+                {% if customer.has_account %}
+                  <a href="{{ routes.account_url }}" class="user">
+                    <i class="fa fa-user-o" aria-hidden="true"></i>
+                  </a>
+                  <span class="user_title">My Account</span>
+                {% else %}
+                  <a href="{{ routes.account_login_url }}" class="user">
+                    <i class="fa fa-user-o" aria-hidden="true"></i>
+                    </a>
+                    <span class="user_title">My Account</span>
+                {% endif %}
+              </div>
+              
+              <div class="header-upper-nav_responsive">
+                <div class="nav-content">
+                  <div class="responsive_language">
+                {% if localization.available_countries.size > 1 %}
+                  <localization-form>
+                    {%- form 'localization', id: 'FooterLanguageForm', class: 'localization-form' -%}
+                      <div class="no-js-hidden">
+                        <div class="disclosure">
+                          <button type="button" class="disclosure__button localization-form__select localization-selector link link--text caption-large" aria-expanded="false" aria-controls="FooterLanguageList" aria-describedby="FooterLanguageLabel">
+                            {{ localization.language.endonym_name | capitalize }}
+                            {% render 'icon-caret' %}
+                          </button>
+                          <div class="disclosure__list-wrapper" hidden>
+                            <ul id="FooterLanguageList" role="list" class="disclosure__list list-unstyled">
+                              {%- for language in localization.available_languages -%}
+                                <li class="disclosure__item" tabindex="-1">
+                                  <a class="link link--text disclosure__link caption-large{% if language.iso_code == localization.language.iso_code %} disclosure__link--active{% endif %} focus-inset" href="#" hreflang="{{ language.iso_code }}" lang="{{ language.iso_code }}"{% if language.iso_code == localization.language.iso_code %} aria-current="true"{% endif %} data-value="{{ language.iso_code }}">
+                                    {{ language.endonym_name | capitalize }}
+                                  </a>
+                                </li>
+                              {%- endfor -%}
+                            </ul>
+                          </div>
+                        </div>
+                          <input type="hidden" name="locale_code" value="{{ localization.language.iso_code }}">
+                        </div>
+                      {%- endform -%}
+                  </localization-form>
+                  <localization-form>
+                    {%- form 'localization', id: 'FooterCountryForm', class: 'localization-form' -%}
+                      <div class="no-js-hidden">
+                        <div class="disclosure">
+                          <button type="button" class="disclosure__button localization-form__select localization-selector link link--text caption-large currency" aria-expanded="false" aria-controls="FooterCountryList" aria-describedby="FooterCountryLabel">
+                            {{ localization.country.name }} ({{ localization.country.currency.iso_code }} {{ localization.country.currency.symbol }}) 
+                            {% render 'icon-caret' %}
+                          </button>
+                          <div class="disclosure__list-wrapper" hidden>
+                            <ul id="FooterCountryList" role="list" class="disclosure__list list-unstyled">
+                              {%- for country in localization.available_countries -%}
+                                <li class="disclosure__item" tabindex="-1">
+                                  <a class="link link--text disclosure__link caption-large{% if country.iso_code == localization.country.iso_code %} disclosure__link--active{% endif %} focus-inset" href="#"{% if country.iso_code == localization.country.iso_code %} aria-current="true"{% endif %} data-value="{{ country.iso_code }}">
+                                    {{ country.name }} <span class="localization-form__currency">({{ country.currency.iso_code }} {{ country.currency.symbol }})</span>
+                                  </a>
+                                </li>
+                              {%- endfor -%}
+                            </ul>
+                          </div>
+                        </div>
+                        <input type="hidden" name="country_code" value="{{ localization.country.iso_code }}">
+                      </div>
+                    {%- endform -%}
+                  </localization-form>
+                {% endif %}
+              </div>
+                  <ul class="upper_nav upper-nav-second">
+                    <li>
+                      <a href="/" class="nav-social-media">
+                        <i class="fa fa-facebook" aria-hidden="true"></i>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="/" class="nav-social-media">
+                        <i class="fa fa-twitter" aria-hidden="true"></i>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="/" class="nav-social-media">
+                        <i class="fa fa-instagram" aria-hidden="true"></i>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="/" class="nav-social-media">
+                        <i class="fa fa-pinterest" aria-hidden="true"></i>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+  {
+    "name": "Custom Header",
+    "settings": [
+      {
+        "type": "textarea",
+        "id": "hedphone-img",
+        "label": "Headphone Image"
+      },
+      {
+        "type": "text",
+        "id": "service-head",
+        "label": "Service Head",
+        "default": "need help"
+      },
+      {
+        "type": "text",
+        "id": "service-phone",
+        "label": "Service Phone",
+        "default": "+2200 500 5236"
+      },
+      {
+        "type": "image_picker",
+        "id": "logo-img",
+        "label": "Logo Image"
+      }, {
+        "type": "link_list",
+        "id": "header-link",
+        "label": "Header Menu",
+        "default": "main-menu"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "header",
+        "name": "Mega Menu",
+        "limit": 5,
+        "settings": [
+          {
+            "type": "text",
+            "id": "menu_title",
+            "label": "Menu Title"
+          },
+          {
+            "type": "checkbox",
+            "id": "mega-img",
+            "label": "Mega Menu Image"
+          },
+          {
+            "type": "image_picker",
+            "id": "menu_img",
+            "label": "Product Image"
+          },
+          {
+            "type": "text",
+            "id": "nav-content",
+            "label": "Nav Content",
+            "default": "Nav content"
+          }, {
+            "type": "url",
+            "id": "link",
+            "label": "Button Link"
+
+          }, {
+            "type": "text",
+            "id": "btn",
+            "label": "Title",
+            "default": "Button"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Custom Header"
+      }
+    ]
+  }
+{% endschema %}

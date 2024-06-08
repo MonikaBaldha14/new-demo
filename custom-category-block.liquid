@@ -1,0 +1,53 @@
+<section class="main-content">
+  <div class="main-category-block">
+    <div class="category-collection-inner" id="collectionLoop">
+      <div class="collection-main-content">
+        <h2 class="heading">{{ section.settings.heading }}</h2>
+        <p class="content">{{ section.settings.content-inner }}</p>
+      </div>
+      <div class="category-inner-block responsive_slick">
+        {% for collection in collections %}
+          <div class="category_main">
+            <a class="collection_url" href="{{ collection.url }}">
+              <div class="category_img">
+                <img
+                  class="coll_img"
+                  src="{{ collection.featured_image | img_url: 'master' }}"
+                  alt="category Image">
+                  <span class="category_title">{{ collection.title }}</span>
+                  {% comment %} <div class="category_title">
+                    
+                  </div> {% endcomment %}
+              </div>
+            </a>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+  {
+    "name": "Category Block",
+    "settings": [
+      {
+        "type": "text",
+        "id": "heading",
+        "label": "Collection",
+        "default": "Heading"
+      },
+      {
+        "type": "text",
+        "id": "content-inner",
+        "label": "Collection",
+        "default": "Content"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Category Block"
+      }
+    ]
+  }
+{% endschema %}

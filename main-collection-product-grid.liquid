@@ -1,0 +1,90 @@
+<div class="main-collection-block">
+  {% render 'custom-bg' %}
+  <section class="main-content">
+    <div class="collection-main-list-filter">
+      <div class="collection-filter-toggle">
+          <div class="collection-filter-inner">
+            <form class="sortby_form">
+              {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
+                <select name="sort_by" class="collection-filter-sortby">
+                  {% for option in collection.sort_options %}
+                    <option
+                      value="{{ option.value }}"
+                      {% if option.value == sort_by %}
+                      selected="selected"
+                      {% endif %}>
+                      {{ option.name }}
+                    </option>
+                  {% endfor %}
+                </select>
+            </form>
+          </div>
+        <div class="filter-bars">
+          <div class="inner-filter-bar">
+            <i class="fa fa-align-left" aria-hidden="true"></i>
+            <span class="filter">Filter</span>
+          </div>
+        </div>
+      </div>
+      <div class="product-collection-filter-main">
+        <div class="close-filters">
+          <span class="filter-by">Filter By</span>
+          <i class="closed fa fa-times" aria-hidden="true"></i>
+        </div>
+        <div class="product-inner-filter">
+          {% render 'custom-filter' %}
+        </div>
+      </div>
+
+      <div class="collection-main-inner">
+      {% for filter in collection.filters %}
+          <div class="custom-collection-content-inner">
+              <div class="main-collection-list">
+                {% paginate collection.products by 12 %}
+                  <div class="collection-featured-product">
+                    {% for product in collection.products %}
+                      <div class="collection-product-filter">
+                        {% render 'product-item'
+                          , product: product
+                          , collection: collection %}
+                      </div>
+                    {% endfor %}
+                  </div>
+                  <div class="pagination">
+                    {% if paginate.pages > 1 %}
+                      {{ paginate | default_pagination }}{% endif %}
+                  </div>
+                {% endpaginate %}
+              </div>
+            </div>
+      {% endfor %}
+            
+      </div>
+    </div>
+  </section>
+</div>
+      
+{% schema %}
+  {
+    "name": "collections Slide",
+    "settings": [],
+    "blocks": [
+      {
+        "type": "collection",
+        "name": "Collection",
+        "settings": [
+          {
+            "type": "collection",
+            "id": "collection_id",
+            "label": "Collection"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Collection Slide"
+      }
+    ]
+  }
+{% endschema %}

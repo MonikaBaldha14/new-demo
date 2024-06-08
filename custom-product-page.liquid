@@ -1,0 +1,288 @@
+<div class="loader_filter"></div>
+<div class="layout_block_filter"></div>
+<section class="main-content">
+  {% render 'breadcrumbs' %}
+    <div class="page-title">
+      <div class="product-main">
+        <div class="product-cart-img">
+          <ul class="product-img-thumb">
+            {% for image in product.images %}
+            <li class="product_slider_main {% if image == featured %}selected{% endif %}"  id="product-featured-img-inner"><img class="image_slider_one" src="{{ image | img_url: 'master' }}" alt=""></li>
+            {% endfor %}
+          </ul> 
+          {% assign featured = product.selected_or_first_available_variant.featured_image %}
+          <ul class="product-featured-img">
+            {% for image in product.images %}
+              <li class="image_slider" id="product-img-inner">
+                <img class="image_slider_two" id="product-img" src="{{ image | image_url }}" alt="">
+              </li>
+            {% endfor %}
+            </ul>
+        </div>
+        <div class="product-inner-main">
+          <div class="product-title">
+              <h3>{{ product.title }}</h3>
+          </div>
+          {% render 'judgeme_widgets', widget_type: 'judgeme_preview_badge', jm_style: '', concierge_install: false, product: product %}
+          <div class="product-price">
+            {% if product.compare_at_price != blank %}
+              <p class="compare-at-price">{{ product.selected_or_first_available_variant.compare_at_price |  money }}</p>
+              <p class="price">{{ product.selected_or_first_available_variant.price |  money }}</p>
+              {% else %}
+              <p class="price">{{ product.selected_or_first_available_variant.price |  money }}</p>
+            {% endif %}
+          </div> 
+            {% comment %} {% if product.compare_at_price_max > product.price %}
+              {% assign price = product.selected_or_first_available_variant.price %}
+              {% assign compare_at_price = product.selected_or_first_available_variant.compare_at_price %}
+              {% assign discount_percentage = compare_at_price
+              | minus: price
+              | times: 100.0
+              | divided_by: compare_at_price
+              %}
+              <span class="percent-count-product-page">-{{ discount_percentage | round: 0 }}% off</span>
+          {% endif %} {% endcomment %}
+            <div class="product-description">
+              <p>{{ product.description }}</p>
+            </div>
+            {%- form 'product', product,  id: 'product_form_installment_id', class: 'product-page-form' -%}
+              <input type="hidden" name="return_to" value="/cart">
+              <input type="hidden" id="product-id" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+              <div id="quantity_val" value="1">{{ current_variant.inventory_quantity }}</div>
+                {% if product.variants.size > 1 %}
+                  <div class="product-option">
+                  {% if product.metafields.custom.size_guide != blank %} 
+                    <div class="size-guide-img">
+                      <p class="size__guide">Size Guide</p>
+                      <div class="size_chart_main">
+                        <div class="size_chart_inner">
+                          <h3 class="size_chart_head">Size Guide</h3>
+                          <i class="close_size_chart fa fa-window-close-o" aria-hidden="true"></i>
+                        </div>
+                        <div class="size_guide_main_img">
+                          <img class="size_chart_img" src="{{ product.metafields.custom.size_guide | image_url: width: 350 }}" alt="Size Guide"> 
+                        </div>
+                      </div>
+                    </div>
+                  {% endif %}
+                      {% for option in product.options_with_values %}
+                          <fieldset class="product-variants">
+                            <legend class="product_variant-title">
+                                {{ option.name }}
+                            </legend>
+                            <div class="variants-filter">
+                              {% for value in option.values %}
+                                  <div class="option-value">
+                                      {% if option.name == 'Color'%}
+                                          <input
+                                          {% if option.selected_value == value %}checked{% endif %}
+                                          type="radio"
+                                          name="{{ option.name }}"
+                                          value="{{ value }}"
+                                          id="{{ option.name | handleize }}-{{ value | handleize }}" class="product_variant_color product-variant-option" >
+                                          <label style="background-color: {{ value }};" class="variant-option-label-color" for="{{ option.name | handleize }}-{{ value |  handleize }}"></label>
+                                          <div class="product-variant-value">
+                                          <p>{{ value }}</p>
+                                          </div>
+                                      {% else %}
+                                          <input
+                                          {% if option.selected_value == value %}checked{% endif %}
+                                          type="radio"
+                                          class="product-variant-option"
+                                          name="{{ option.name }}"
+                                          value="{{ value }}"
+                                          id="{{ option.name | handleize }}-{{ value |  handleize }}">
+                                          <label class="variant-option-label" for="{{ option.name | handleize }}-{{ value |  handleize }}"><p>{{ value }}</p></label>
+                                      {% endif %}
+                                  </div>
+                              {% endfor %}
+                            </div>
+                          </fieldset>
+                      {% endfor %}
+                    </div>
+                {% endif %}
+                <div class="product-cart">
+                  <div class="quanitity-main">
+                    <div class="quantity-selector">
+                      <button type="button" class="quantity-selector-minus quantity minus">
+                        <i class="quantity_icon fa fa-minus" aria-hidden="true"></i>
+                      </button>
+                      <input id="quantity" name="quantity" value="1" class="product-quantity" readonly>
+                      <button type="button" class="quantity-selector-plus quantity plus">
+                        <i class="quantity_icon fa fa-plus" aria-hidden="true"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="add_to_cart_btn">
+                    <button type="submit" {% unless product.selected_or_first_available_variant.available %} disabled {% endunless %} id="add-to-cart" class="product-add" >
+                      {% if product.selected_or_first_available_variant.available %}
+                        Add to Cart
+                      {% else %}
+                        Out of Stock
+                      {% endif %}
+                    </button> 
+                  </div>
+                </div>
+                
+               {% assign current_variant = product.selected_or_first_available_variant %}
+                <p class="stock_message">We have {{ current_variant.inventory_quantity }} Product left in stock!</p>
+                <p class="quantity_msg"></p>
+            {% endform %}
+            <div class="product_single__addtolist">
+              <div class="single__product single__wishlist">
+                <i class="fa fa-heart-o" aria-hidden="true"></i>
+                <span>Add to Wishlist</span>
+              </div>
+              <div class="single__product single__sharelist">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+                <span>Share</span>
+              </div>
+            </div>
+        </div>
+    </div>
+
+  {% if template.name == 'product' %}
+    <div class="product__metafield">
+        {% if product.metafields.custom.description %}
+          <h3 class="discription_main_head">Description</h3>
+          <div class="metafeid__inner discription__main">
+            <div class="discription__inner__one">
+              <h5 class="metafeild_inner_head discription_inner_head">Sed do eiusmod tempor incididunt ut labore</h5>
+              <p class="discription_content">{{ product.metafields.custom.description }}</p>
+            </div>
+            <div class="discription__inner__two">
+              <div class="discription__inner__left">
+                <h5 class="metafeild_inner_head discription_inner_head">Why choose product?</h5>
+                <ul class="discription__left__ul">
+                    <li class="discription__li__left">{{ product.metafields.custom.ul_list_one }}</li>
+                    <li class="discription__li__left">{{ product.metafields.custom.ul_list_two }}</li>
+                    <li class="discription__li__left">{{ product.metafields.custom.ul_list_three }}</li>
+                </ul>
+              </div>
+              <div class="discription__inner__right">
+                <h5 class="metafeild_inner_head discription_inner_head">Sample Number List</h5>
+                <ol class="discription__right_ul">
+                    <li class="discription__li__right">{{ product.metafields.custom.ol_list_one }}</li>
+                    <li class="discription__li__right">{{ product.metafields.custom.ol_list_two }}</li>
+                    <li class="discription__li__right">{{ product.metafields.custom.ol_list_three }}</li>
+                </ol>
+              </div>
+            </div>
+            <div class="discription__inner__three">
+              <h5 class="metafeild_inner_head discription_inner_head">Lining</h5>
+              <p class="discription__content">{{ product.metafields.custom.discription_lining }}</p>
+            </div>
+          </div>
+        {% endif %}
+    </div>
+    <div class="product__metafield__inner product__metafield__information">
+      {% if product.metafields.custom.description %}
+        <h3 class="discription_main_head">Additional Information</h3>
+        <div class="metafeid__inner information__inner_main">
+          {% if product.metafields.custom.weight.value != blank %}
+            <div class="discription__inner_information">
+              <h5 class="metafeild_inner_head info_inner_head">Weight</h4>
+              <span class="discription_content">{{ product.metafields.custom.weight.value }}</span>
+            </div>
+          {% endif %}
+          <div class="discription__inner_information">
+            <h5 class="metafeild_inner_head info_inner_head">Dimensions</h4>
+            <span class="discription_content">{{ product.metafields.custom.dimension }}</span>
+          </div>
+          <div class="discription__inner_information">
+            <h5 class="metafeild_inner_head info_inner_head">Size</h4>
+            <span class="discription_content">
+                {% for option in product.options_with_values %}
+                  {% if option.name == 'Size'%}
+                    {% for value in option.values %}
+                      {{ value | split: ", " }}
+                    {% endfor %}
+                  {% endif %}
+                {% endfor %}
+            </span>
+          </div>
+            <div class="discription__inner_information">
+              <h5 class="metafeild_inner_head info_inner_head">Color</h4>
+              <span class="discription_content">
+                {% for option in product.options_with_values %}
+                  {% if option.name == 'Color'%}
+                    {% for value in option.values %}
+                      {{ value }}
+                    {% endfor %}
+                  {% endif %}
+                {% endfor %}
+              </span>
+            </div>
+          {% comment %} {% endfor %} {% endcomment %}
+          <div class="discription__inner_information">
+            <h5 class="metafeild_inner_head info_inner_head">Storage</h4>
+            <span class="discription_content">{{ product.metafields.custom.storage }}</span>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+   </div>
+  </div>
+   {% endif %}
+</section>
+
+<script>
+  var product = {{ product | json }}
+</script>
+<script>
+
+// Change Variants JS
+
+document.querySelectorAll('.product-option input[type="radio"]').forEach(radio => {
+    radio.addEventListener('change', () => {
+
+        var selectedOption = []
+
+        document.querySelectorAll('.product-option input[type="radio"]:checked').forEach(radio => {
+            selectedOption.push(radio.value)
+        })
+
+        var matchedVariant = product.variants.find(variant => {
+            var pass = true
+            for (var i = 0; i < selectedOption.length; i++) {
+                if (selectedOption.indexOf(variant.options[i]) === -1) {
+                    pass = false
+                    break
+                }
+            }
+            return pass
+        })
+
+        document.querySelector("#product-id").value = matchedVariant.id
+        document.querySelector(".price").textContent = formatMoney(matchedVariant.price, "{{ shop.money_format }}");
+        document.querySelector(".compare-at-price").textContent = formatMoney(matchedVariant.compare_at_price, "{{ shop.money_format }}");
+        
+        document.querySelector('.slick-slide.slick-current.slick-active li.image_slider img#product-img').setAttribute('src', matchedVariant.featured_image.src)
+
+        var add = document.querySelector('#add-to-cart')
+        
+        if (matchedVariant.available) {
+            add.textContent = "Add to Cart"
+            add.disabled = false
+        }
+        else {
+            add.textContent = "Out of Stock"
+            add.disabled = true
+        }
+    })
+})
+
+document.querySelector('.quantity-selector-plus').addEventListener('click', () => {
+    var currentVal = Number(document.querySelector('#quantity').value)
+    document.querySelector('#quantity').value = currentVal + 1
+})
+
+document.querySelector('.quantity-selector-minus').addEventListener('click', () => {
+    var currentVal = Number(document.querySelector('#quantity').value)
+
+    if (currentVal > 1) {
+        document.querySelector('#quantity').value = currentVal - 1
+    }
+})
+
+</script>
