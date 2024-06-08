@@ -1,0 +1,52 @@
+<div class="layout__block__quick"></div>
+<div class="loader_filter"></div>
+<div class="product_quick">
+  <div class="layout_view"></div>
+  <div class="quick_view_close"><i class="fa fa-times-circle-o" aria-hidden="true"></i></div>
+<div id="quick-view"></div>
+  <div class="qv-product-images"></div>
+  <div class="qv-content">
+    <div class="holder">
+      <h3 class="qv-product-title"></h3>
+      <div class="price_view">
+        <h5 class="qv-product-original-price"></h5>
+        <h5 class="qv-product-price"></h5>
+      </div>
+      <div class="qv-product-description"></div>
+      <div class="qv-add-to-cart">
+        <div class="qv-product-options"></div>
+          <div class="quantity-main">
+            <span>Quantity</span>
+            <div class="quantity-selector">
+              <button type="button" class="quantity-minus quantity minus"><b>-</b></button>
+              <input id="quick_quantity" name="quantity" value="1" class="product-quantity">
+              <button type="button" class="quantity-plus quantity plus"><b>+</b></button>
+            </div>
+          </div>
+          <input type="submit" class="qv-add-button" value="Add to Cart">
+          
+          <div class="qv-add-to-cart-response"></div>
+      </div>
+        </div>
+    <a class="view-product" href=""><span>View Product</span></a>
+  </div>
+  </div>
+</div>
+
+<script>
+  var product = {{ product | json }}
+</script>
+
+<script>
+      document.querySelector('.quantity-plus').addEventListener('click', () => {
+      var currentVal = Number(document.querySelector('#quick_quantity').value)
+      document.querySelector('#quick_quantity').value = currentVal + 1
+  })
+  
+  document.querySelector('.quantity-minus').addEventListener('click', () => {
+      var currentVal = Number(document.querySelector('#quick_quantity').value)
+      if (currentVal > 1) {
+          document.querySelector('#quick_quantity').value = currentVal - 1
+      }
+  })
+</script>

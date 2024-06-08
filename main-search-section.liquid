@@ -1,0 +1,42 @@
+<div class="search_result_page">
+  <div class="container">
+    {% paginate search.results by 12 %}
+      <div class="result-product">
+        <section class="main-content">
+            <div class="result-serach-block">
+              <form action="/search" method="get" role="search">
+                <input type="text" id="search-input" name="q" value="{{ search.terms | escape }}">
+                <i class="fa fa-search predictive-search-icon-result" aria-hidden="true"></i>
+              </form>
+            </div>
+        
+            <div class="result-product-block">
+              {% if search.performed %}
+                {% for item in search.results %}
+                  <div class="trend__item">
+                            {% if item.featured_image %}
+                              <div class="trend__item__pic">
+                                  <a href="{{ item.url | within: collection }}" title="{{ item.title | escape }}"></a>
+                                    {{ item.featured_image.src | img_url: 'medium' | img_tag: item.featured_image.alt }}
+                                  </a>
+                              </div>
+                            {% endif %}
+                              <div class="trend__item__text">
+                                <p class="product-title">{{ item.title | link_to: item.url }}</p>
+                                <p class="product-price">{{ item.price | money_with_currency }}</p>
+                                <p class="product-sku">{{ item.sku }}</p>
+                              </div>
+                    </div>
+                {% else %}
+                  <p class="no_result">Result Not Found.</p>
+                {% endfor %}
+              {% endif %}
+              <div class="pagination">
+                {% if paginate.pages > 1 %}{{ paginate | default_pagination }}{% endif %}
+              </div>
+            </div>
+        </section>
+      </div>
+    {% endpaginate %}
+  </div>
+</div>

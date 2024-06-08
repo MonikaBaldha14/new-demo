@@ -1,0 +1,57 @@
+
+{%- form 'product', product,  id: 'product_form_installment_id', class: 'product-page-form' -%}    <input type="hidden" name="return_to" value="/cart">
+    <input type="hidden" id="product_id" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+        <div class="featured-product-url">
+            <div class="featured-product-img">
+                <a class="product-block" href="{{ product.url }}">
+                    <img class="product-img" src="{{ product.featured_image | img_url: '300x300' }}" alt="product-img">
+                </a>
+                <div class="product-block-icon">
+                    <div class="product-icon">
+                        <div class="product_quick_view"><a class="quick_view" data-handle="{{ product.handle }}" href="javascript:void(0);"><i class="fa fa-eye" aria-hidden="true"></i></a></div>
+                        <a href="#" class="wishlist_icon"><i class="fa fa-heart-o" aria-hidden="true"></i></a>  
+                    </div>
+                </div>
+                {% if product.tags contains 'Sale' %}
+                    <span class="sale_tag">Sale</span>
+                {% endif %}
+                {% if product.compare_at_price_max > product.price %}
+                    {% assign price = product.selected_or_first_available_variant.price %}
+                    {% assign compare_at_price = product.selected_or_first_available_variant.compare_at_price %}
+                    {% assign discount_percentage = compare_at_price
+                    | minus: price
+                    | times: 100.0
+                    | divided_by: compare_at_price
+                    %}
+                    <span class="percent-count">-{{ discount_percentage | round: 0 }}% off</span>
+                {% endif %}
+            </div>
+            <div class="main-product-content">
+                <a class="product-block" href="{{ product.url }}">
+                    <div class="featured-product-vender">
+                        <p class="content">{{ product.vendor }}</p>
+                    </div>
+                    <div class="featured-product-title">
+                        <h3 class="title">{{ product.title }}</h3>
+                    </div>
+                </a>
+                <div class="product-prices">
+                    {% if product.compare_at_price != blank %}
+                        <div class="featured-product-cmp">
+                            <p class="content"><del>{{ product.compare_at_price |  money_with_currency }}</del></p>
+                        </div>
+                        <div class="featured-product-price">
+                            <p class="content">{{ product.price  | money_with_currency }}</p>
+                        </div>
+                        {% else %}
+                        <div class="featured-product-price">
+                            <p class="content">{{ product.price  | money_with_currency }}</p>
+                        </div>
+                    {% endif %}
+                    
+                </div>
+                {% render 'judgeme_widgets', widget_type: 'judgeme_preview_badge', jm_style: '', concierge_install: false, product: product %}
+                
+            </div>
+            </div>
+        {% endform %}

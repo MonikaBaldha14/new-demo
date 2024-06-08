@@ -1,0 +1,174 @@
+<div class="filter  scroll-trigger ">
+    <form class="filter-form">
+        <div class="filter_head"><h3>Filter By</h3></div>
+        <div>
+            <p class="clear-all">
+                <a href="" class="clear">Clear All Filters</a>
+            </p>
+            
+        {%- for filter in collection.filters -%}
+            <div class="filters-activate-label">
+                {%- for filter_value in filter.active_values -%}
+                    <div class="filter-active">
+                        <p class="filter-label"> {{ filter.label }}: <span>{{ filter_value.label }}</span> </p>
+                        <a class="remove-btn" href="{{ filter_value.url_to_remove }}">
+                            <i class="fa fa-times" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                {%- endfor -%}
+            </div>
+        {%- endfor -%}
+        </div>
+        <div class="custom-filter" data-col="{{ shop.url }}">
+        <div class="filter-content" data="{{collection.url}}">
+            {%- for filter in collection.filters -%}
+                <div class="custom-filter-value" for="Filter-{{ filter.param_name }}-{{ forloop.index }}">
+                    <div class="filter-main-title">
+                    <span>{{ filter.label }}:</span>
+                    <i class="up-arrow-filter fa fa-angle-up" aria-hidden="true"></i>
+                    </div>
+                    {%- case filter.type -%}
+                        {%- when 'list' -%}
+                            <div class="custom-collection-filters">
+                            <ul class="filter-group-display__list">
+                                {%- for filter_value in filter.values -%}
+                                    {% if filter.label == 'Color' %}
+                                        <li class="filter-inner-item-color">
+                                            <input
+                                            type="checkbox"
+                                            class="input-checkbox input-color"
+                                            name="{{ filter_value.param_name }}"
+                                            value="{{ filter_value.value }}"
+                                            id="Filter-{{ filter.param_name }}-{{ forloop.index }}"
+                                            {% if filter_value.active -%}
+                                            checked{%- endif %}
+                                            {% if filter_value.count == 0 and filter_value.active == false -%}
+                                            disabled{%- endif %}>
+                                            <label {% if filter.label == 'Color' %} style="background-color:{{ filter_value.label }}" {% endif %} class="filter-lable-color" for="Filter-{{ filter.param_name }}-{{ forloop.index }}">
+                                                <span class="filter_label_color">
+                                                    {{ filter_value.label }}
+                                                </span> 
+                                            </label>
+                                            </li>
+                                        {% else %}
+                                        {% if filter.label == 'Size' %}
+                                            <li class="filter-inner-item">
+                                            <input
+                                            type="checkbox"
+                                            class="input-checkbox"
+                                            name="{{ filter_value.param_name }}"
+                                            value="{{ filter_value.value }}"
+                                            id="Filter-{{ filter.param_name }}-{{ forloop.index }}"
+                                            {% if filter_value.active -%}
+                                            checked{%- endif %}
+                                            {% if filter_value.count == 0 and filter_value.active == false -%}
+                                            disabled{%- endif %}>
+                                            <label class="filter-lable" for="Filter-{{ filter.param_name }}-{{ forloop.index }}">
+                                                <span class="filter_label">
+                                                    {{ filter_value.label }}
+                                                </span> 
+                                            </label>
+                                        </li>
+                                        {% else %}
+                                        <li class="filter-inner-item-other">
+                                            <input
+                                            type="checkbox"
+                                            class="input-checkbox input-other"
+                                            name="{{ filter_value.param_name }}"
+                                            value="{{ filter_value.value }}"
+                                            id="Filter-{{ filter.param_name }}-{{ forloop.index }}"
+                                            {% if filter_value.active -%}
+                                            checked{%- endif %}
+                                            {% if filter_value.count == 0 and filter_value.active == false -%}
+                                            disabled{%- endif %}>
+                                            <label class="filter-lable-other" for="Filter-{{ filter.param_name }}-{{ forloop.index }}">
+                                                <span class="filter_label-other">
+                                                    {{ filter_value.label }}
+                                                </span> 
+                                            </label>
+                                        </li>
+                                        {% endif %}
+                                        {% endif %}
+                                {%- endfor -%}
+                            </ul>
+                            </div>
+                           {%- when 'price_range' -%}
+                                <div class="filter-group-display__price-range">
+                                    <div class="filter-group-display__price-range-from">
+                                        <div class="price-field">
+                                            <input
+                                            type="range"
+                                            class="input-range input-range-min field_input_from"
+                                            value="{{ 10 | money_without_currency | remove: ".00" }}"
+                                            min="0"
+                                            max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                                            default="600"
+                                            step="50">
+
+                                            <input
+                                            type="range"
+                                            class="input-range input-range-max field_input_from"
+                                            value="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                                            min="0"
+                                            max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                                            default="900"
+                                            step="50">
+                                        </div>
+                                        
+                                        <div class="price-input">
+                                            <div class="input-price-field min-field">
+                                                <span>Min:</span>
+                                                <input type="number" 
+                                                class="input_price input-min" 
+                                                value="0" 
+                                                id="Filter-{{ filter.min_value.param_name }}" 
+                                                name="{{ filter.min_value.param_name }}" 
+                                                min="0" inputmode="decimal" 
+                                                max="{{ filter.range_max | money_without_currency | remove: ".00" }}">
+                                            </div>
+
+                                            <div class="input-price-field max-field">
+                                                <span>Max:</span>
+                                                <input name="{{ filter.max_value.param_name }}"
+                                                id="Filter-{{ filter.max_value.param_name }}"
+                                                class="input_price input-max"
+                                                value="3000"
+                                                type="number"
+                                                min="0"
+                                                inputmode="decimal"
+                                                max="{{ filter.range_max | money_without_currency | remove: ".00"  }}">
+                                            </div>  
+                                        </div>
+                                        <div class="slider">
+                                            <div class="progress"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                    {% endcase %}
+                </div>
+            {%- endfor -%}
+        </div>
+        <div class="collection-filter">
+            <div class="filter-main-title">
+                    <span>Sort By:</span>
+                    <i class="up-arrow-filter fa fa-angle-up" aria-hidden="true"></i>
+                    </div>
+            {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
+            <select name="sort_by" class="collection-filter-inner">
+            {% for option in collection.sort_options %}
+                <option
+                value="{{ option.value }}"
+                {% if option.value == sort_by %}
+                selected="selected"
+                {% endif %}>
+                    {{ option.name }}
+                </option>
+            {% endfor %}
+            </select>
+        </div>
+        <div>
+            {{ results.results_count }}
+        </div>
+        </div>
+    </form>
+</div>
