@@ -1,0 +1,102 @@
+
+<section class="main-content">
+    <div class="main-cart-block" data-money-format="{{ shop.money_format }}">
+        <div class="width" id="main_cart">
+            <div class="cart-heading">
+                <h1>Cart</h1>
+            </div>
+            <div class="cart-main-block">
+                {% form 'cart', cart, class: 'cart-page-form' %}
+                    {% if cart.empty? %}
+                        <div class="cart_empty">
+                            <p>Your Cart Is Empty!</p>
+                            <a href="/" class="keep_shopping">Keep Shopping</a>
+                        </div>
+                        {% else %}
+                            
+                      <div class="main-cart-content">
+                        <table class="cart-main-block-table">
+                            <thead class="cart-head">
+                                <tr class="cart-head-row">
+                                    <th class="cart-inner-head product">Product</th>
+                                    <th class="cart-inner-head blank"></th>
+                                    <th class="cart-inner-head price">Price</th>
+                                    <th class="cart-inner-head quntity">quantity</th>
+                                    <th class="cart-inner-head subtotal">Subtotal</th>
+                                    <th class="cart-inner-head blank"></th>
+                                </tr>
+                            </thead>
+                            <tbody class="cart-table-body">
+                                
+                                {% for item in cart.items %}
+                                    <tr class="cart-main-block-inner-tr" data-line-item-key="{{ item.key }}">
+                                        <td class="cart-product-info cart-item-image">
+                                            <img src="{{ item.image | img_url: '135x120' }}" alt="{{ item.title }}">
+                                        </td>
+                                            <td class="cart-product-info cart-item-main-flex-left">
+                                            <h3>
+                                                <a href="{{ item.url }}">{{ item.product.title }}</a><br>
+                                            </h3>
+                                            <span>{{ item.variant.title }}</span><br>
+                                            <span class="line_item_price_mobile">{{ item.price | money }}</span>
+                                            <span class="line_item_price subtotal">{{ item.final_line_price | money }}</span>
+                                        </td>
+                                        <td class="cart-product-info variant-price">
+                                            <span class="line_item_price">{{ item.price | money }}</span>
+
+                                        </td>
+                                        
+                                        <td class="cart-product-info cart-quantity-selector">
+                                            <div class="quantity-btn">
+                                                <button type="button" class="cart-quantity-selector-minus quantity minus loader_block">
+                                                <i class="quantity_icon fa fa-minus" aria-hidden="true"></i>
+                                                </button>
+                                                    <input
+                                                    id="cart-quantity"
+                                                    name="updates[]"
+                                                    class="product-quantity"
+                                                    readonly
+                                                    value="{{ item.quantity }}">
+                                                <button type="button" class="cart-quantity-selector-plus quantity plus loader_block">
+                                                <i class="quantity_icon fa fa-plus" aria-hidden="true"></i>
+                                                </button>
+                                            </div>
+                                                {% comment %} {% assign current_variant = product.selected_or_first_available_variant %}
+                                                <div id="drawer_quantity_val" value="{{ current_variant.inventory_quantity }}">{{ current_variant.inventory_quantity }}</div> {% endcomment %}
+                                            <div class="layout__block"></div>
+                                            <div class="loader"></div>
+                                        </td>
+                                        <td class="cart-product-info variant-price subtotal">
+                                            <span class="line_item_price subtotal">{{ item.final_line_price | money }}</span>
+                                        </td>
+                                        <td class="cart-product-info remove-cart">
+                                            <a class="remove_items" href="{{ item.url_to_remove }}" >
+                                                <i class="remove-items fa fa-times" aria-hidden="true"></i>
+                                            </a>
+                                        </td> 
+                                        
+                                    </tr>
+                                {% endfor %}
+                                
+                            </tbody>
+                        </table>
+                      </div>
+                        <div class="footer-cart-page">
+                            <div class="cart-total-main-block">
+                                <h3 class="cart-total">Cart Totals</h3>
+                                <div class="cart-total-price">
+                                    <p class="total total_subtotal">Subtotal: {{ cart.total_price |  money }}</p>
+                                    <p class="total total_price">Total: {{ cart.total_price |  money }}</p>
+                                </div>
+                            </div>
+                            <div class="custom-cart-button">
+                                <button type="checkout" name="checkout" class="cart-update custom-cart-checkout">proceed to Checkout</button>
+                            </div>  
+                        </div>
+                    {% endif %}
+                {% endform %}   
+            </div>
+        <span class="total-product">{{ cart.item_count }}</span>
+        </div>
+    </div>
+</section>

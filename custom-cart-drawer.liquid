@@ -1,0 +1,108 @@
+<div class="layout-block"></div>
+<div class="loader"></div>
+<div class="cart-drawer cart-drawer-right" id="cart-drawer">
+  <div class="side_cart_wrapper_fixed"></div>
+  <div class="cart-drawer-box">
+    <div class="product-cart-title">
+      <div class="cart-detail">
+        <h3>Shopping Bag</h3>
+        (<span class="product-item-count"> {{ cart.item_count }}</span>)
+      </div>
+      <p class="close_btn" id="close-btn">
+        <i class="fa fa-times close" aria-hidden="true"></i>
+      </p>
+    </div>
+    {% if cart.item_count == 0 %}
+      <p class="cart-drawer-empty">Your Cart Is Empty!</p>
+    {% else %}
+      {% form 'cart'
+        , cart
+        , class: 'cart-drawer-form' %}
+        <div class="cart-drawer-items">
+          {% for item in cart.items %}
+            <div class="drawer-cart-main-block" data-line-item-key="{{ item.key }}">
+              <div class="remove-drawer-cart">
+                <a class="remove_items" href="{{ item.url_to_remove }}">
+                  <i class="fa fa-trash-o" aria-hidden="true"></i>
+                </a>
+              </div>
+              <div class="cart-drawer-item-main">
+                <div class="cart-drawer-item-image">
+                  <a href="{{ item.url }}">
+                    <img src="{{ item.image | img_url: '150x100' }}" alt="{{ item.title }}">
+                  </a>
+                </div>
+                <div class="cart-drawer-product-info">
+                  <div class="cart-drawer-item-main-flex-left">
+                    <h4>
+                      <a href="{{ item.url }}">{{ item.product.title }}</a>
+                    </h4>
+                  </div>
+                  <div class="variant-title">
+                    <span>{{ item.variant.title }}</span>
+                  </div>
+                    {% assign current_variant = product.selected_or_first_available_variant %}
+                    <div id="drawer_quantity_val" value="{{ current_variant.inventory_quantity }}">{{ current_variant.inventory_quantity }}</div>
+                  <div class="cart-drawer-quantity-selector">
+                    <button type="button" class="cart-drawer-quantity-selector-minus quantity minus">
+                      <i class="quantity_icon fa fa-minus" aria-hidden="true"></i>
+                    </button>
+                    <input
+                      readonly
+                      id="cart-drawer-quantity"
+                      name="quantity"
+                      class="product-quantity"
+                      value="{{ item.quantity }}">
+                    <button type="button" class="cart-drawer-quantity-selector-plus quantity plus">
+                      <i class="quantity_icon fa fa-plus" aria-hidden="true"></i>
+                    </button>
+                  </div>
+                    <div class="layout__block"></div>
+                    <div class="loader"></div>
+                  <div class="cart-drawer-item-main-flex-right">
+                    <span>{{ item.final_line_price | money }}</span>
+                  </div>
+                  <p class="quantity_msg"><span><b>ERROR: </b>You can't add more product to cart.</span></p>
+
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+
+        <footer class="cart-drawer-footer">
+          {% if cart.total_discounts > 0 %}
+            <div class="cart-drawer-footer-row">
+              <h3>Discounts</h3>
+              <span>{{ cart.total_discounts | money }}</span>
+            </div>
+          {% endif %}
+          <div class="cart-drawer-footer-row">
+            <h3>Subtotal</h3>
+            <span>{{ cart.total_price | money }}</span>
+          </div>
+          <div class="cart-drawer-footer-row-btn">
+            <button
+              type="submit"
+              name="cart-page"
+              class="cart-page-btn"
+              id="cart-page-btn">View Cart</button>
+            <button
+              type="submit"
+              name="checkout"
+              class="cart-drawer-button"
+              id="drawer-checkout-btn">Checkout</button>
+          </div>
+        </footer>
+      {% endform %}
+    {% endif %}
+  </div>
+</div>
+{% comment %} {% render 'custom-cart-drawer' %} {% endcomment %}
+
+{% schema %}
+  {
+    "name": "Custom Cart Drawer",
+    "settings": []
+  }
+{% endschema %} 
