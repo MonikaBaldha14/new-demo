@@ -1,0 +1,353 @@
+The cart drawer displays the last added product recommendation.
+
+File: custom-cart-drawer-recommendations.css
+Code: 
+.cart-recommendations {
+  margin: 1rem 0;
+  border-top: 1px solid var(--color-border);
+  padding-top: 1rem;
+}
+ 
+.cart-recommendations__title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    color: var(--color-foreground);
+}
+.cart-recommendations__slider {
+  padding-bottom: 0.5rem;
+}
+ 
+.swiper-wrapper {
+  display: flex;
+  gap: 0.75rem;
+}
+.cart-recommendation-item {
+    min-width: 48%;
+    flex-shrink: 0;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-medium);
+    background: var(--color-background);
+    padding: 0.5rem;
+    text-align: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: 1px solid #ddddddb0;
+}
+ 
+ 
+.cart-recommendation-item img {
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius-small);
+  margin-bottom: 0.5rem;
+  object-fit: cover;
+}
+ 
+.cart-recommendation-item .title {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-foreground);
+    margin-bottom: 0.375rem;
+    height: 36px;
+    line-height: 1.2;
+    overflow: hidden;
+    letter-spacing: 0;
+}
+ 
+.cart-recommendation-item button {
+    width: 100%;
+    padding: 1rem 0;
+    background-color: var(--color-foreground);
+    /* color: var(--color-background); */
+    /* border: none; */
+    border-radius: 0;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    background: #fff;
+    color: #000;
+    text-transform: uppercase;
+}
+ 
+.cart-recommendation-item button:hover {
+  background-color: var(--color-foreground-hover, #333);
+  color: #fff;
+}
+ 
+/* Swiper Navigation Arrows using Dawn variables */
+.swiper-button-next,
+.swiper-button-prev {
+  color: var(--color-foreground);
+  width: 24px;
+  height: 24px;
+  top: 35%;
+}
+ 
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+  color: var(--color-foreground-hover, #555);
+}
+ 
+.img-container {
+    display: flex;
+    width: 100%;
+    height: 200px;
+}
+ 
+/* Base arrow styles */
+.swiper-button-next,
+.swiper-button-prev {
+  width: 20px;
+  height: 20px;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: #fff !important;
+  transition: all 0.3s ease;
+   display: block !important;
+ 
+   line-height: 44px;
+    text-align: center;
+}
+ 
+/* Arrow icon size */
+.swiper-button-next::after,
+.swiper-button-prev::after {
+  font-size: 20px !important;
+  font-weight: bold;
+}
+ 
+/* Hover effect */
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+  background-color: #000;
+}
+ 
+/* Keep arrows visible even when disabled */
+.swiper-button-next.swiper-button-disabled,
+.swiper-button-prev.swiper-button-disabled {
+  opacity: 0.4;
+  pointer-events: none;
+  display: block !important;
+}
+ 
+/* Position adjustment (optional) */
+.swiper-button-prev {
+  left: 10px;
+}
+ 
+.swiper-button-next {
+  right: 10px;
+}
+ 
+/* RTL support */
+.swiper-rtl .swiper-button-next::after,
+.swiper-button-prev::after {
+  font-size: 20px;
+}
+ 
+==================================================
+File: cart-drawer. Liquid
+ 
+  Add below code after this: "<div class="cart-drawer__footer" {{ block.shopify_attributes }}>"
+ 
+  {% comment %} START - Prectical task - Cart Drawer Recommendations (Swiper) {% endcomment %}
+          <div id="cart-recommendations" class="cart-recommendations" style="display: none;">
+            <h3 class="cart-recommendations__title">You may also like</h3>
+ 
+            <div class="cart-recommendations__slider swiper">
+              <div class="swiper-wrapper"></div>
+ 
+              <div class="swiper-button-prev"></div>
+              <div class="swiper-button-next"></div>
+            </div>
+          </div>
+          {% comment %} END - Prectical task - Cart Drawer Recommendations (Swiper) {% endcomment %}
+ 
+ 
+cart-drawer.js
+ 
+class CartDrawer extends HTMLElement {
+  constructor() {
+    super();
+ 
+    this.addEventListener('keyup', e => e.code === 'Escape' && this.close());
+    this.querySelector('#CartDrawer-Overlay')?.addEventListener('click', this.close.bind(this));
+ 
+    this.setHeaderCartIconAccessibility();
+  }
+ 
+  setHeaderCartIconAccessibility() {
+    const cartLink = document.querySelector('#cart-icon-bubble');
+    if (!cartLink) return;
+ 
+    cartLink.setAttribute('role', 'button');
+    cartLink.setAttribute('aria-haspopup', 'dialog');
+ 
+    cartLink.addEventListener('click', e => {
+      e.preventDefault();
+      this.open(cartLink);
+    });
+ 
+    cartLink.addEventListener('keydown', e => {
+      if (e.code.toUpperCase() === 'SPACE') {
+        e.preventDefault();
+        this.open(cartLink);
+      }
+    });
+  }
+ 
+  open(triggeredBy) {
+    if (triggeredBy) this.activeElement = triggeredBy;
+    this.classList.add('animate', 'active');
+    document.body.classList.add('overflow-hidden');
+ 
+    setTimeout(() => {
+      fetch('/cart.js')
+        .then(res => res.json())
+        .then(cart => {
+          if (!cart.items.length) return;
+          const lastProductId = cart.items[cart.items.length - 1].product_id;
+          loadCartDrawerRecommendations(lastProductId);
+        });
+    }, 500);
+  }
+ 
+  close() {
+    this.classList.remove('active');
+    document.body.classList.remove('overflow-hidden');
+  }
+ 
+  renderContents(parsedState) {
+    this.querySelector('.drawer__inner')?.classList.remove('is-empty');
+ 
+    this.getSectionsToRender().forEach(section => {
+      const el = section.selector ? document.querySelector(section.selector) : document.getElementById(section.id);
+      if (!el) return;
+      el.innerHTML = this.getSectionInnerHTML(parsedState.sections[section.id], section.selector);
+    });
+ 
+    this.querySelector('#CartDrawer-Overlay')?.addEventListener('click', this.close.bind(this));
+    this.open();
+  }
+ 
+  getSectionInnerHTML(html, selector = '.shopify-section') {
+    return new DOMParser().parseFromString(html, 'text/html').querySelector(selector).innerHTML;
+  }
+ 
+  getSectionsToRender() {
+    return [
+      { id: 'cart-drawer', selector: '#CartDrawer' },
+      { id: 'cart-icon-bubble' }
+    ];
+  }
+  setActiveElement(element) {
+    this.activeElement = element;
+  }
+ 
+}
+ 
+customElements.define('cart-drawer', CartDrawer);
+ 
+class CartDrawerItems extends CartItems {
+  getSectionsToRender() {
+    return [
+      { id: 'CartDrawer', section: 'cart-drawer', selector: '.drawer__inner' },
+      { id: 'cart-icon-bubble', section: 'cart-icon-bubble', selector: '.shopify-section' }
+    ];
+  }
+}
+ 
+customElements.define('cart-drawer-items', CartDrawerItems);
+ 
+// Date:15/12/'25 - Start Load Recommended Products in Drawer (Custom Code)
+function loadCartDrawerRecommendations(productId) {
+  const container = document.getElementById('cart-recommendations');
+  if (!container || !productId) return;
+ 
+  const track = container.querySelector('.swiper-wrapper');
+  if (!track) return;
+ 
+  // we Use Shopify’s native recommendation algorithm
+  fetch(`/recommendations/products.json?product_id=${productId}&limit=6`)
+    .then(res => res.json())
+    .then(data => {
+      if (!data.products?.length) {
+        container.style.display = 'none'; // hide if no recommendations
+        return;
+      }
+ 
+      container.style.display = 'block'; // show only if products exist
+      track.innerHTML = '';
+ 
+      // Load product recommendations data dynamically
+ 
+      data.products.forEach(product => {
+        if (!product.variants?.length) return;
+ 
+        track.insertAdjacentHTML('beforeend', `
+          <div class="swiper-slide cart-recommendation-item">
+            <div class="img-container">
+              <img src="${product.featured_image}" alt="${product.title}">
+            </div>
+            <div class="content-container">
+              <p class="title">${product.title}</p>
+              <button class="cart-rec-add" data-variant-id="${product.variants[0].id}">Add to cart</button>
+            </div>
+          </div>
+        `);
+      });
+ 
+      // Initialize Swiper as usual
+      setTimeout(() => {
+        if (container.swiper) container.swiper.destroy(true, true);
+ 
+        container.swiper = new Swiper('.cart-recommendations__slider', {
+          slidesPerView: 2,
+          spaceBetween: 12,
+          freeMode: true,
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          },
+        });
+      }, 100);
+    });
+}
+ 
+ 
+ 
+document.addEventListener('click', function (e) {
+  const btn = e.target.closest('.cart-rec-add');
+  if (!btn) return;
+ 
+  e.preventDefault();
+ 
+  btn.disabled = true;
+  btn.textContent = 'Adding...';
+ 
+  fetch('/cart/add.js', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    },
+    body: JSON.stringify({
+      id: btn.dataset.variantId,
+      quantity: 1
+    })
+  })
+    .then(() => fetch('/?sections=cart-drawer,cart-icon-bubble'))
+    .then(res => res.json())
+    .then(sections => {
+      const drawer = document.querySelector('cart-drawer');
+      if (!drawer) return;
+ 
+      drawer.renderContents({ sections });
+      drawer.open();
+    })
+    .catch(() => {
+      btn.disabled = false;
+      btn.textContent = 'Add to cart';
+    });
+});
+// Date:15/12/'25 - end- Load Recommended Products in Drawer (Custom Code)
+ 
